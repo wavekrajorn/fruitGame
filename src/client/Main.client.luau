@@ -1,0 +1,2 @@
+--!strict
+-- Client entry point. Nothing to do yet.

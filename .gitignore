@@ -1,0 +1,7 @@
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+build/
+Packages/
+.env
+*.key

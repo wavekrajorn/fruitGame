@@ -1,0 +1,36 @@
+# Not run yet: needs a git repo on GitHub and a rokit.toml (see README).
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: CompeyDev/setup-rokit@v0.1.2
+      - run: stylua --check src
+      - run: selene src
+      - run: rojo build default.project.json --output build/fruitGame.rbxl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fruitGame-place
+          path: build/fruitGame.rbxl
+
+  # Publish to Roblox through Open Cloud. Enable after creating the API key and secrets listed in README.
+  # publish:
+  #   needs: check
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: CompeyDev/setup-rokit@v0.1.2
+  #     - run: rojo build default.project.json --output fruitGame.rbxl
+  #     - run: rbxcloud experience publish --filename fruitGame.rbxl --place-id "$PLACE_ID" --universe-id "$UNIVERSE_ID" --version-type published --api-key "$ROBLOX_API_KEY"
+  #       env:
+  #         PLACE_ID: ${{ secrets.PLACE_ID }}
+  #         UNIVERSE_ID: ${{ secrets.UNIVERSE_ID }}
+  #         ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
